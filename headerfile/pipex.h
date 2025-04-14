@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rpadasia <rpadasia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rpadasia <ryanpadasian@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:26:47 by rpadasia          #+#    #+#             */
-/*   Updated: 2025/04/08 19:29:27 by rpadasia         ###   ########.fr       */
+/*   Updated: 2025/04/13 16:58:16 by rpadasia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <errno.h>
+# include <stdio.h>
 
 typedef struct s_file
 {
@@ -29,9 +30,8 @@ typedef struct s_file
 void	cp(char *argv[], int *fd, char **envp, int infile);
 void	pp(char	*argv[], int *fd, char **envp, int outfile);
 void	execute(char	*arg, char **envp);
-void	errors(char *err, int type);
-void	cmd_dir(char	*cmd, char **envp);
-void	free_path(char **paths);
+char	*cmd_dir(char	*cmd, char **envp);
+void	free_path(char **pa/ths);
 
 
 #endif

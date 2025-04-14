@@ -3,78 +3,71 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rpadasia <rpadasia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rpadasia <ryanpadasian@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 14:47:55 by rpadasia          #+#    #+#             */
-/*   Updated: 2025/04/08 12:55:55 by rpadasia         ###   ########.fr       */
+/*   Updated: 2025/04/13 16:06:00 by rpadasia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static size_t	word_count(const char *s, char c)
+char	**word_array(char const *s, char c)
 {
-	size_t	count;
-	int		in_word;
+	int	i;
+	int	wc;
 
-	count = 0;
-	in_word = 0;
-	while (*s)
-	{
-		if (*s != c && in_word == 0)
-		{
-			in_word = 1;
-			count++;
-		}
-		else if (*s == c)
-			in_word = 0;
-		s++;
-	}
-	return (count);
+	wc = 0;
+	i = 0;
+	while (s[i])
+		if (s[i++] != c && (s[i] == c || s[i] == '\0'))
+			wc++;
+	return ((char **)malloc((wc + 1) * sizeof(char *)));
 }
 
-static char	*word_dup(const char *s, size_t len)
+char	*ft_strndup(const char *s, size_t n)
 {
-	char	*word;
+	char	*res;
+	size_t	i;
 
-	word = (char *)malloc(sizeof(char) * (len + 1));
-	if (!word)
+	res = malloc(sizeof(char) * (n + 1));
+	if (res == NULL)
 		return (NULL);
-	ft_strlcpy(word, s, len + 1);
-	return (word);
-}
-
-static void	free_all(char **arr, size_t i)
-{
-	while (i-- > 0)
-		free(arr[i]);
-	free(arr);
+	i = 0;
+	while (i < n && s[i])
+	{
+		res[i] = s[i];
+		i++;
+	}
+	res[i] = '\0';
+	return (res);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char	**res;
-	size_t	i;
-	size_t	len;
-	size_t	words;
+	char	**result;
+	int		i;
+	int		j;
+	int		k;
 
-	words = word_count(s, c);
-	res = (char **)malloc(sizeof(char *) * (words + 1));
-	if (!res)
-		return (NULL);
+	result = word_array(s, c);
 	i = 0;
-	while (i < words)
+	j = 0;
+	k = 0;
+	while (s[i])
 	{
-		while (*s && *s == c)
-			s++;
-		len = 0;
-		while (s[len] && s[len] != c)
-			len++;
-		res[i] = word_dup(s, len);
-		if (!res[i++])
-			return (free_all(res, i - 1), NULL);
-		s += len;
+		while (s[i] == c)
+			i++;
+		j = i;
+		while (s[j] && s[j] != c)
+			j++;
+		if (j > i)
+		{
+			result[k] = ft_strndup(s + i, j - i);
+			k++;
+		}
+		i = j;
 	}
-	res[i] = NULL;
-	return (res);
+	result[k] = NULL;
+	return (result);
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rpadasia <rpadasia@student.42.fr>          +#+  +:+       +#+         #
+#    By: rpadasia <ryanpadasian@gmail.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/08 14:52:56 by rpadasia          #+#    #+#              #
-#    Updated: 2025/04/08 19:28:25 by rpadasia         ###   ########.fr        #
+#    Updated: 2025/04/13 16:34:42 by rpadasia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rpadasia <rpadasia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rpadasia <ryanpadasian@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 16:21:25 by rpadasia          #+#    #+#             */
-/*   Updated: 2025/04/08 19:14:27 by rpadasia         ###   ########.fr       */
+/*   Updated: 2025/04/13 16:44:23 by rpadasia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,23 @@ void	free_path(char **paths)
 	free(paths);
 }
 
-void	cmd_dir(char	*cmd, char **envp)
+char	*cmd_dir(char	*cmd, char **envp)
 {
 	int		i;
 	char	*path_env;
 	char	**paths;
 	char	*full_path;
 
-	while (envp[i] && strncmp(envp[i], "PATH=", 5) != 0)
-		i++;
-	paths = ft_split(envp[i] + 5, ":");
 	i = 0;
-	while (paths[i])
-	{
+	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
+		i++;
+	paths = ft_split(envp[i] + 5, ':');
+	i = 0;
+	while (paths[i]) {
 		path_env = ft_strjoin(paths[i], "/");
 		full_path = ft_strjoin(path_env, cmd);
-		if (access(full_path, F_OK) == 0)
+		free(path_env);
+		if (access(full_path, X_OK) == 0)
 		{
 			free_path(paths);
 			return (full_path);
@@ -63,17 +64,11 @@ void	execute(char	*arg, char **envp)
 	{
 		free_path(cmd);
 		write(2, "Invalid Path\n", 14);
-		exit();
+		exit(1);
 	}
 	execve(path, cmd, envp);
-	free_path(cmd);
+	perror("execve");
 	free(path);
-	exit();
-}
-
-void	errors(char *err, int type)
-{
-	write(2, err, ft_strlen(msg));
-	write(2, "\n", 1);
-	exit(type);
+	free_path(cmd);
+	exit(0);
 }

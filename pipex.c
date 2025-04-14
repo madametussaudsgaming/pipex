@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rpadasia <rpadasia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rpadasia <ryanpadasian@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 12:58:40 by rpadasia          #+#    #+#             */
-/*   Updated: 2025/04/08 19:29:51 by rpadasia         ###   ########.fr       */
+/*   Updated: 2025/04/13 23:20:33 by rpadasia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,26 @@
 
 void	cp(char *argv[], int *fd, char **envp, int infile)
 {
-	dup2(infile, 0);
-	dup2(fd[1], 1);
+	if (dup2(infile, STDIN_FILENO) == -1)
+		perror("dup2 infile failed");
+	if (dup2(fd[1], STDOUT_FILENO) == -1)
+		perror("dup2 fd[1] failed");
 	close(fd[0]);
-	execute(argv[2], envp);
+	close(fd[1]);
 	close(infile);
+	execute(argv[2], envp);
 }
 
 void	pp(char	*argv[], int *fd, char **envp, int outfile)
 {
-	dup2(outfile, 1);
-	dup2(fd[0], 0);
+	if (dup2(fd[0], STDIN_FILENO) == -1)
+		perror("dup2 fd[0] failed");
+	if (dup2(outfile, STDOUT_FILENO) == -1)
+		perror("dup2 outfile failed lol");
+	close(fd[0]);
 	close(fd[1]);
-	execute(argv[3], envp);
 	close(outfile);
+	execute(argv[3], envp);
 }
 
 void	pipexmain(char **argv, char **envp)
@@ -37,7 +43,17 @@ void	pipexmain(char **argv, char **envp)
 	int		outfile;
 
 	infile = open(argv[1], O_RDONLY);
-	outfile = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC | 0777);
+	outfile = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	if (infile < 0 || outfile < 0)
+	{
+		perror("FILE MISSING");
+		exit(1);
+	}
+	if (pipe(pipex.fd) < 0)
+	{
+		perror("PIPE ERROR");
+		exit(1);
+	}
 	pipex.pid[0] = fork();
 	if (pipex.pid[0] == 0)
 		cp(argv, pipex.fd, envp, infile);
@@ -57,7 +73,7 @@ int	main(int argc, char *argv[], char **envp)
 	if (argc != 5)
 	{
 		write(2, "ERROR, FIVE ARGUMENTS NEEDED\n", 30);
-		return (0);
+		return (1);
 	}
 	pipexmain(argv, envp);
 	return (0);
