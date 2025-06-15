@@ -3,71 +3,154 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rpadasia <ryanpadasian@gmail.com>          +#+  +:+       +#+        */
+/*   By: alechin <alechin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/10 14:47:55 by rpadasia          #+#    #+#             */
-/*   Updated: 2025/04/13 16:06:00 by rpadasia         ###   ########.fr       */
+/*   Created: 2024/11/07 15:30:35 by alechin           #+#    #+#             */
+/*   Updated: 2024/11/29 14:34:18 by alechin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+Name
+
+split
+
+char **ft_split(char const *s, char c);
+
+Description
+
+Allocates (with malloc(3)) and returns an array
+of strings obtained by splitting ’s’ using the
+character ’c’ as a space. The array must end
+with a NULL pointer.
+
+Return Value
+
+The array of new strings resulting from the split.
+NULL if the allocation fails.
+*/
+
 #include "libft.h"
 
-char	**word_array(char const *s, char c)
+static void	*free_all(char **result, int z)
 {
 	int	i;
-	int	wc;
 
-	wc = 0;
 	i = 0;
-	while (s[i])
-		if (s[i++] != c && (s[i] == c || s[i] == '\0'))
-			wc++;
-	return ((char **)malloc((wc + 1) * sizeof(char *)));
+	while (i < z)
+		free(result[i++]);
+	free(result);
+	return (NULL);
 }
 
-char	*ft_strndup(const char *s, size_t n)
+static int	ft_count_substrings(char const *s, char c)
 {
-	char	*res;
-	size_t	i;
+	int	count;
+	int	in_substring;
 
-	res = malloc(sizeof(char) * (n + 1));
-	if (res == NULL)
-		return (NULL);
-	i = 0;
-	while (i < n && s[i])
+	count = 0;
+	in_substring = 0;
+	while (*s)
 	{
-		res[i] = s[i];
-		i++;
+		if (*s != c && in_substring == 0)
+		{
+			in_substring = 1;
+			count++;
+		}
+		else if (*s == c)
+		{
+			in_substring = 0;
+		}
+		s++;
 	}
-	res[i] = '\0';
-	return (res);
+	return (count);
+}
+
+static char	*ft_strlen_until_char(const char *s, char c, int *i)
+{
+	char	*ptr;
+	int		size;
+	int		j;
+	int		a;
+
+	size = 0;
+	j = *i;
+	a = 0;
+	while (s[j] && s[j] != c)
+	{
+		size++;
+		j++;
+	}
+	ptr = malloc(sizeof(char) * (size + 1));
+	if (!ptr)
+		return (NULL);
+	while (*i < j)
+	{
+		ptr[a++] = s[*i];
+		*i += 1;
+	}
+	ptr[a] = '\0';
+	return (ptr);
+}
+
+static char	**split_words(char **result, char const *s, char c)
+{
+	int	i;
+	int	a;
+
+	i = 0;
+	a = -1;
+	while (s[i])
+	{
+		if (s[i] != c)
+		{
+			result[++a] = ft_strlen_until_char(s, c, &i);
+			if (!result[a])
+				return (free_all(result, a));
+		}
+		else
+			i++;
+	}
+	result[++a] = NULL;
+	return (result);
 }
 
 char	**ft_split(char const *s, char c)
 {
 	char	**result;
-	int		i;
-	int		j;
-	int		k;
+	int		size;
 
-	result = word_array(s, c);
-	i = 0;
-	j = 0;
-	k = 0;
-	while (s[i])
+	if (!s)
+		return (NULL);
+	size = ft_count_substrings(s, c);
+	result = malloc(sizeof(char *) * (size + 1));
+	if (!result)
+		return (NULL);
+	if (!split_words(result, s, c))
 	{
-		while (s[i] == c)
-			i++;
-		j = i;
-		while (s[j] && s[j] != c)
-			j++;
-		if (j > i)
-		{
-			result[k] = ft_strndup(s + i, j - i);
-			k++;
-		}
-		i = j;
+		free(result);
+		return (NULL);
 	}
-	result[k] = NULL;
 	return (result);
 }
+/*
+#include <stdio.h>
+int	main()
+{
+	char *str = "Hello world this is split";
+	char **result = ft_split(str, ' ');
+	int i = 0;
+
+	while (result[i] != NULL)
+	{
+		printf("%s\n", result[i]);
+		i++;
+	}
+	while (result[i] != NULL)
+	{
+		free(result[i]);
+		i++;
+	}
+	free(result);
+	return (0);
+}*/

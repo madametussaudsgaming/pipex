@@ -1,48 +1,46 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: rpadasia <rpadasia@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/11/13 18:33:54 by rpadasia          #+#    #+#              #
-#    Updated: 2025/04/08 14:50:48 by rpadasia         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = libft.a
 
-SRC = 	ft_atoi.c ft_isdigit.c ft_memmove.c ft_split.c ft_strlcpy.c ft_strtrim.c ft_bzero.c ft_isprint.c \
-		ft_memset.c ft_strchr.c ft_strlen.c ft_substr.c ft_calloc.c ft_itoa.c ft_putchar_fd.c ft_strdup.c ft_strmapi.c \
-		ft_tolower.c ft_isalnum.c ft_memchr.c ft_putendl_fd.c ft_striteri.c ft_strncmp.c ft_toupper.c ft_isalpha.c \
-		ft_memcmp.c ft_putnbr_fd.c ft_strjoin.c ft_strnstr.c ft_isascii.c ft_memcpy.c ft_putstr_fd.c ft_strlcat.c ft_strrchr.c \
+SOURCE = \
+				ft_atoi.c		ft_isascii.c	ft_memcmp.c		ft_putendl_fd.c		ft_strdup.c 	\
+				ft_strlen.c		ft_strtrim.c	ft_bzero.c		ft_isdigit.c		ft_memcpy.c 	\
+				ft_putnbr_fd.c	ft_striteri.c	ft_strmapi.c	ft_substr.c			ft_calloc.c 	\
+				ft_isprint.c	ft_memmove.c	ft_putstr_fd.c	ft_strjoin.c 						\
+				ft_strncmp.c	ft_tolower.c	ft_isalnum.c	ft_itoa.c			ft_memset.c 	\
+				ft_split.c		ft_strlcat.c	ft_strnstr.c	ft_toupper.c		ft_isalpha.c 	\
+				ft_memchr.c		ft_putchar_fd.c ft_strchr.c		ft_strlcpy.c		ft_strrchr.c	\
+				ft_isspace.c																		\
+				ft_printf/ft_printf.c			ft_printf/ft_printf_utils.c							\
+				ft_printf/ft_printf_second_utils.c													\
+				get_next_line/get_next_line.c	get_next_line/get_next_line_utils.c					\
 
-SRCB = ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
+BONUS = \
+				ft_lstadd_back.c	ft_lstclear.c		ft_lstiter.c	ft_lstmap.c \
+				ft_lstsize.c		ft_lstadd_front.c	ft_lstdelone.c	ft_lstlast.c \
+				ft_lstnew.c
 
-OBJ = $(SRC:%.c=%.o)
-OBJB = $(SRCB:%.c=%.o)
-CC = gcc
-RM = rm -f
-LIBC = ar rcs
-CFLAGS = -Wall -Wextra -Werror -I.
+OBJ = $(SOURCE:.c=.o)
+OBJ_BONUS = $(BONUS:.c=.o)
+
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
+
+.PHONY: all clean fclean re bonus
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(LIBC) $(NAME) $(OBJ)
-
-bonus: $(NAME) $(OBJB)
-	$(LIBC) $(NAME) $(OBJB)
+	@ar rcs $@ $^
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJ) $(OBJB)
+	@rm -rf ./*.o
 
 fclean: clean
-	$(RM) $(NAME)
+	@rm -rf $(NAME)
 
 re: fclean all
 
-.PHONY: all bonus clean fclean re
+bonus: $(OBJ) $(OBJ_BONUS)
+	ar rcs $(NAME) $^

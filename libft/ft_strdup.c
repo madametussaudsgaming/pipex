@@ -3,29 +3,72 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rpadasia <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alechin <alechin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/05 07:51:36 by rpadasia          #+#    #+#             */
-/*   Updated: 2024/11/07 20:30:40 by rpadasia         ###   ########.fr       */
+/*   Created: 2024/11/06 17:37:57 by alechin           #+#    #+#             */
+/*   Updated: 2025/03/31 09:47:56 by alechin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+Name
+
+strdup
+
+Synopsis
+
+#include <string.h>
+
+char *strdup(const char *s);
+
+Description
+
+The strdup() function returns a pointer to 
+a new string which is a duplicate of the string s.
+Memory for the new string is obtained with
+ malloc(3), and can be freed with free(3). 
+
+Return Value
+
+The strdup() function returns a pointer to the duplicated string,
+or NULL if insufficient memory was available. 
+*/
+
 #include "libft.h"
 
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(const char *s)
 {
+	size_t	n;
 	size_t	i;
-	char	*dest;
+	char	*dup;
 
-	dest = (char *) malloc(ft_strlen(s1) + 1);
-	if (!dest)
-		return (0);
-	i = 0;
-	while (s1[i])
+	n = 0;
+	while (s[n] != '\0')
 	{
-		dest[i] = s1[i];
+		n++;
+	}
+	dup = (char *)malloc(n + 1);
+	if (dup == NULL)
+	{
+		return (NULL);
+	}
+	i = 0;
+	while (s[i] != '\0')
+	{
+		dup[i] = s[i];
 		i++;
 	}
-	dest[i] = 0;
-	return (dest);
+	dup[i] = '\0';
+	return (dup);
 }
+/*
+#include <stdio.h>
+int	main()
+{
+	char *str = "Hello, world!";
+	char *copy = ft_strdup(str);
+
+	printf("copy: %s\n", copy);
+	free(copy);
+	return (0);
+}*/

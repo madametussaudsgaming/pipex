@@ -3,33 +3,70 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rpadasia <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alechin <alechin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/07 17:22:33 by rpadasia          #+#    #+#             */
-/*   Updated: 2024/11/18 19:08:00 by rpadasia         ###   ########.fr       */
+/*   Created: 2024/11/07 14:35:31 by alechin           #+#    #+#             */
+/*   Updated: 2024/11/29 14:48:45 by alechin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+Name
+
+strjoin
+
+Synopsis
+
+#include <string.h>
+
+char *ft_strjoin(char const *s1, char const *s2);
+
+Description
+
+Allocates (with malloc(3)) and returns a new
+string, which is the result of the concatenation
+of ’s1’ and ’s2’.
+
+Return Value
+
+The new string.
+NULL if the allocation fails.
+*/
+
 #include "libft.h"
 
-char	*ft_strjoin(const char	*s1, const char	*s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*res;
-	int		i;
-	int		j;
+	char	*str;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
 	j = 0;
 	if (!s1 || !s2)
 		return (NULL);
-	res = (char *) malloc((ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!res)
+	str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!str)
 		return (NULL);
 	while (s1[i])
-		res[j++] = s1[i++];
-	i = 0;
-	while (s2[i])
-		res[j++] = s2[i++];
-	res[j] = '\0';
-	return (res);
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	while (s2[j])
+	{
+		str[i + j] = s2[j];
+		j++;
+	}
+	str[i + j] = '\0';
+	return (str);
 }
+/*
+#include <stdio.h>
+int	main(void)
+{
+	char *result = ft_strjoin("Hello, ", "world!");
+	printf("%s\n", result);
+	free(result);
+	return (0);
+}*/

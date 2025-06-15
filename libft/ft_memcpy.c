@@ -3,31 +3,61 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rpadasia <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alechin <alechin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/05 10:26:43 by rpadasia          #+#    #+#             */
-/*   Updated: 2024/11/18 17:45:55 by rpadasia         ###   ########.fr       */
+/*   Created: 2024/11/05 14:38:10 by alechin           #+#    #+#             */
+/*   Updated: 2024/11/29 14:18:47 by alechin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+Name
+
+memcpy
+
+Synopsis
+
+#include <string.h>
+
+void *memcpy(void *dest, const void *src, size_t n);
+
+Description
+
+he memcpy() function copies n bytes from memory area src to memory area dest. 
+The memory areas must not overlap. 
+Use memmove(3) if the memory areas do overlap.
+
+Return Value
+
+The memcpy() function returns a pointer to dest. 
+*/
+
 #include "libft.h"
 
-void	*ft_memcpy(void	*dst, const void	*src, size_t	n)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	unsigned char	*tempdest;
-	unsigned char	*tempsrc;
-	size_t			i;
+	unsigned char		*d;
+	const unsigned char	*s;
 
-	if (!dst && !src)
-		return (NULL);
-	i = 0;
-	tempsrc = (unsigned char *) src;
-	tempdest = (unsigned char *) dst;
-	while (n > 0)
+	d = dest;
+	s = src;
+	while (n--)
 	{
-		tempdest[i] = tempsrc[i];
-		i++;
-		n--;
+		*d = *s;
+		d++;
+		s++;
 	}
-	return (dst);
+	return (dest);
 }
+/*
+#include <stdio.h>
+int	main(void)
+{
+	char	*dest = malloc(11);
+	char	*src = "Hello World";
+
+	ft_memcpy(dest, src, 11);
+	printf("%s\n", src);
+	printf("%s\n", dest);
+	return (0);
+}*/

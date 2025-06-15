@@ -3,40 +3,71 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rpadasia <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alechin <alechin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/05 10:43:10 by rpadasia          #+#    #+#             */
-/*   Updated: 2024/11/18 17:03:56 by rpadasia         ###   ########.fr       */
+/*   Created: 2024/11/05 14:42:08 by alechin           #+#    #+#             */
+/*   Updated: 2024/11/29 16:09:45 by alechin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+Name
+
+memmove
+
+Synopsis
+
+#include <string.h>
+
+void *memmove(void *dest, const void *src, size_t n);
+
+Description
+
+The memmove() function copies n bytes from memory area src to memory area dest. 
+The memory areas may overlap: 
+copying takes place as though the bytes in src are first copied into a
+temporary array that does not overlap src or dest, 
+and the bytes are then copied from the temporary array to dest.
+
+Return Value
+
+The memmove() function returns a pointer to dest. 
+*/
+
 #include "libft.h"
 
-void	*ft_memmove(void *dst, const void	*src, size_t	len)
+void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	char	*tempsrc;
-	char	*tempdest;
-	size_t	i;
+	unsigned char		*d;
+	const unsigned char	*s;
 
-	i = 0;
-	if (!dst && !src)
-		return (NULL);
-	tempsrc = (char *) src;
-	tempdest = (char *) dst;
-	if (tempdest > tempsrc)
+	d = dest;
+	s = src;
+	if (d == s)
 	{
-		while (len-- > 0)
-		{
-			tempdest[len] = tempsrc[len];
-		}
+		return (dest);
+	}
+	if (s < d && d < s + n)
+	{
+		s += n;
+		d += n;
+		while (n--)
+			*(--d) = *(--s);
 	}
 	else
 	{
-		while (i < len)
-		{
-			tempdest[i] = tempsrc[i];
-			i++;
-		}
+		while (n--)
+			*d++ = *s++;
 	}
-	return (dst);
+	return (dest);
 }
+/*
+#include <stdio.h>
+int	main(void)
+{
+	char str[] = "Hello World";
+	
+	printf("Original string: %s\n", str);
+	ft_memmove(str + 6, str + 7, 5);
+	printf("String after moving: %s\n", str);
+}*/
